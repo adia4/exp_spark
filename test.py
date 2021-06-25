@@ -18,7 +18,15 @@ from pyspark.ml.util import DefaultParamsReadable, DefaultParamsWritable
 from pyspark.sql.functions import udf
 from pyspark.sql.types import ArrayType, StringType
 
-spark = sparknlp.start()
+spark = SparkSession.builder\
+	.appName("ner")\
+	.master("spark://192.168.1.100:7077")\
+	.config("spark.driver.memory","1g")\
+	.config("spark.executor.memory","1g")\
+	.config("spark.cores.max","1")\
+	.config("spark.jars.packages", "com.johnsnowlabs.nlp:spark-nlp_2.12:3.1.1")\
+	.config("spark.kryoserializer.buffer.max", "1000m")\
+	.getOrCreate()
 sc = spark.sparkContext
 log_txt = sc.textFile("abc.txt")
 header = log_txt.first()
